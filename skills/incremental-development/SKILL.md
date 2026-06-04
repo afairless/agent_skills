@@ -1,6 +1,6 @@
 ---
 name: incremental-development
-description: Enforce a strict implementation workflow where each step is one small, logical unit: write code and tests, verify everything passes, commit with a conventional message, and only then proceed. Use when beginning the implementation phase of any project or after completing any implementation step.
+description: "Enforce a strict implementation workflow where each step is one small, logical unit: write code and tests, verify everything passes, commit with a conventional message, and only then proceed. Use when beginning the implementation phase of any project or after completing any implementation step."
 ---
 
 # Incremental Development
