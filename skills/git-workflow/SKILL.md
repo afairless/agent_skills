@@ -59,6 +59,99 @@ If either check fails, communicate clearly:
 - **Atomicity**: Frequently commit small, incremental changes that together form one logical unit of work. Ensure that unit of work operates correctly with testing and error correction before committing.
 - **Commit message format**: Use the `conventional-commit` skill for commit message formatting rules, types, and examples.
 
+## Post-Work Repository Cleanup
+
+After completing a coding project or task (the last implementation step is committed and all tests pass), check whether any uncommitted changes remain. Automated tools such as formatters, linters, or code generators often leave behind changes after the final manual commit — this section tells you how to handle them so the repository is left clean.
+
+### 1. Check for uncommitted changes
+
+```bash
+git status
+```
+
+- If `git status` shows **nothing to commit** (working tree clean), no action is needed. You are done.
+- If there are **uncommitted changes** (staged, unstaged, or untracked files), proceed to classify them below.
+
+### 2. Classify the changes
+
+Inspect the diff to determine what kind of changes remain:
+
+```bash
+git diff
+```
+
+If `git diff` is empty (everything is staged), also inspect the staged diff:
+
+```bash
+git diff --cached
+```
+
+#### A. Formatting / linting auto-fixes only
+
+The diff consists entirely of changes that match what the project's formatter or linter would produce — whitespace, indentation, line breaks, import reordering, trailing commas, or other purely cosmetic adjustments. Clues:
+- Only existing source files are modified (no new files, no deletions)
+- The diff touches only formatting patterns (spacing, line wrapping, quotes, semicolons, trailing whitespace)
+- Running the project's formatter (e.g., `ruff format`, `prettier --write`, `cargo fmt`, `gofmt -w`, `stylua`) produces an identical diff
+
+**Action**: Commit the changes as a `style:` commit using the `conventional-commit` skill:
+
+```bash
+git add -A
+git commit -m "style: Format code"
+```
+
+Verify the commit landed:
+
+```bash
+git log -1
+```
+
+#### B. Trivial / non-meaningful changes
+
+Uncommitted changes fall into this category when they consist entirely of:
+- Files that belong in `.gitignore` (build output, `__pycache__`, `node_modules`, `.ruff_cache/`, `target/`, etc.)
+- Empty files, editor swap files, or lock files created by accident
+- Whitespace-only changes in non-source files (generated docs, lock files, binary files)
+- Files that were clearly created or modified by a tool run but are not part of the project's source
+
+**Action**: Discard the changes and ensure the working tree is clean:
+
+```bash
+git checkout -- .           # discard unstaged changes in tracked files
+git clean -fd               # remove untracked files and directories
+```
+
+If any of the files should be added to `.gitignore` to prevent recurring noise, update `.gitignore` and commit that change:
+
+```bash
+echo "path/to/file" >> .gitignore
+git add .gitignore
+git commit -m "chore: Add noise files to .gitignore"
+```
+
+#### C. Substantial or ambiguous changes
+
+Any change that is **not** clearly formatting-only and **not** clearly trivial falls into this category. Examples:
+- New source files that were created but never committed
+- Modifications to logic, configuration, or data files
+- A mix of formatting changes *and* meaningful changes in the same file
+- Deletions of source files
+- Changes to files that the agent does not recognize
+
+**Action**: **Stop and ask the user.** Present the full diff (`git diff` and `git diff --cached`) and a summary of what was found. Propose what you think the right action is (e.g., "these look like an incomplete feature — should I commit or discard?"), but let the user make the final call.
+
+### 3. Confirm clean state
+
+After any action (commit, discard, or user direction), run one final check:
+
+```bash
+git status
+```
+
+The working tree must be clean. If it is not, diagnose why and escalate to the user.
+
+---
+
 ## Safety Guardrails
 - **No Force Pushes**: Never run `git push --force` on any branch.
 - **Destructive Actions**: If you encounter a complex Git conflict you cannot resolve via a standard rebase, **stop immediately** and flag a human operator for assistance. Do not attempt manual cache purging or hard resets on remote code.
