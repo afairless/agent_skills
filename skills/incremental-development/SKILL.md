@@ -39,6 +39,8 @@ Read these skills for supporting conventions:
 
 When you begin implementation:
 
+0. **Check workspace health (existing repos only).** If you are working on a repository that already has code and commits, load [git-workflow](../git-workflow/SKILL.md) and follow its **Pre-Work Repository Check** section before doing anything else. Verify the workspace is clean and all tests pass. If either check fails, stop, inform the user, and wait for instructions. Do not proceed until the repo is in a known-good state.
+
 1. **Read the plan.** Load `TODO.md` (or produce one with `plan-commits` if it does not exist). Understand every step in sequence.
 
 2. **Read git-workflow.** Follow its branching strategy: create a branch for the task (`agent/<short-description>`) before writing any code.
