@@ -1,7 +1,7 @@
 ---
 name: write-todo-from-plan
 description: Reads source documents (a feature plan from docs/research/ or project architecture from docs/) and writes a step-by-step, commit-by-commit implementation plan to TODO.md. Each step is a small, testable logical unit. Use when you need to convert research or architecture documents into an actionable implementation plan.
-compatibility: Requires either docs/research/*.md (feature plan) or docs/ARCHITECTURE.md (greenfield project).
+compatibility: Requires either docs/research/*.md (existing, brownfield project with feature plan) or docs/ARCHITECTURE.md (new, greenfield project).
 allowed-tools: Read Bash Write Edit
 ---
 
@@ -144,3 +144,9 @@ Source: `docs/research/<file>.md` or `docs/ARCHITECTURE.md`
 ## Step 6 — Ask the user
 
 Ask the user if the TODO.md plan looks correct, or if they want any adjustments.
+
+---
+
+## Step 7 — Commit plan documents
+
+If the user approves the TODO.md plan, commit TODO.md and any uncommitted plan documents to the main or master branch, or to the branch of the planned feature, if it already exists and is checked out.  If you're unsure which branch to use, ask the user.
