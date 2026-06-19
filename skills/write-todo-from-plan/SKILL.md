@@ -152,3 +152,9 @@ Ask the user if the TODO.md plan looks correct, or if they want any adjustments.
 ## Step 7 — Commit plan documents
 
 If the user approves the TODO.md plan, commit TODO.md and any uncommitted plan documents to the main or master branch, or to the branch of the planned feature, if it already exists and is checked out.  If you're unsure which branch to use, ask the user.
+
+---
+
+## Step 8 — Stop
+
+After committing the plan documents, stop.  Do not start implementing the plan.
