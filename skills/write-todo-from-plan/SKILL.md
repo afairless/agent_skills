@@ -84,6 +84,8 @@ Then reason about the structure and the correct build order. Apply the step-orde
 
 Write the implementation plan to `TODO.md` in the project root.
 
+**Always** list the source documents of the plan in `TODO.md` with the paths to the source documents relative to the project root.
+
 ### Step-ordering principles
 
 These apply to both modes. Every step builds cleanly on all previous steps.
