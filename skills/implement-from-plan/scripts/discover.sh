@@ -20,7 +20,8 @@ if [ ! -f "TODO.md" ]; then
 fi
 
 # Parse Source from TODO.md header: line like "Source: docs/research/foo.md"
-SOURCE=$(grep -i '^Source:' TODO.md | head -1 | sed 's/^[Ss]ource:\s*//' | xargs || true)
+# Handles markdown formatting: "`docs/research/foo.md`", "**docs/research/foo.md**"
+SOURCE=$(grep -i '^Source:' TODO.md | head -1 | sed 's/^[Ss]ource:\s*//; s/[\`\*_~]//g' | xargs || true)
 
 # Determine MODE
 if echo "$SOURCE" | grep -qE '^docs/research/'; then
