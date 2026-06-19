@@ -15,11 +15,13 @@ Discovers the relevant source documents — either a saved feature plan in `docs
 
 ## Step 1 — Discover source documents
 
-Run the discovery script from the project root:
+Run the discovery script. The script is located in this skill's `scripts/` directory. Resolve the path against this skill's own directory (the parent of SKILL.md), **not** the project root:
 
 ```bash
-./scripts/find-source-docs.sh
+<script-dir>/scripts/find-source-docs.sh
 ```
+
+Where `<script-dir>` is the absolute path to this skill's directory (where SKILL.md lives).
 
 The script outputs two variables:
 
