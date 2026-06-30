@@ -1,190 +1,251 @@
 ---
 name: documentation-practices
-description: Conventions for writing project documentation, including docstrings for functions, README files, ARCHITECTURE documentation, and AGENTS documentation. Use when writing code comments, generating project docs, creating README files, or documenting system architecture and agent configurations.
+description: Core conventions for writing project documentation — docstrings, inline comments, README files, and documentation lifecycle management. For architecture or agent-specific docs, use the companion skills. Use when writing code comments, generating project docs, or creating README files.
 ---
 
 # Documentation Practices
 
-## Docstrings
+## 1. Docstrings
 
-Write a doc string for every function that describes the purpose and operation of the function. Do not repeat type annotations in the doc string, unless it is useful to describe how the function operates.
+### 1.1 When to Write a Docstring
 
-## README.md
+Write a docstring for every **public-facing** function and every **non-trivial internal** function. A function is trivial when its name and signature make its behavior completely obvious — for example, a simple getter (`def name(self) -> str`), a `__repr__` method, or a one-line delegation to another function. For those, the docstring adds noise rather than clarity.
 
-When the coding of the project is complete, write a human-readable `README.md` in the project root. Include:
+When in doubt, write the docstring. The cost of removing an unnecessary docstring is far lower than the cost of a missing one.
 
-- The purpose of the project
-- Its features
-- Its directory and file structure
-- Its dependencies
-- How to run it
+### 1.2 What to Include
 
-## docs/ARCHITECTURE.md
+A good docstring answers three questions without repeating information already visible in the signature:
 
-The `docs/ARCHITECTURE.md` file documents the system's architecture for human maintainers and AI agents. It lives at `docs/ARCHITECTURE.md` in the project root. It must never be deleted or renamed without updating every reference to it.
+| Question | What to write |
+|---|---|
+| **What** does this function do? | A single sentence describing the operation (active voice, imperative). |
+| **What** does it return? | Describe the return value or state "Returns None" for void-like functions. |
+| **What** special cases or edge behaviors exist? | Mention behavior on empty input, nulls, boundary values, or error conditions. |
 
-Include the following sections in `docs/ARCHITECTURE.md`:
+**Bad:**
 
-### 1. Purpose and Scope
-
-Explain what this document covers and who the audience is. State whether this is a greenfield system, a migration, or a retrofit of an existing codebase.
-
-### 2. High-Level Architecture
-
-Describe the overall system structure. Use one or more of the following:
-
-- A bullet-list summary of the major components and their responsibilities
-- An ASCII diagram or PlantUML block showing component relationships
-- A brief narrative explaining how the pieces fit together
-
-Avoid diving deeply into any single component at this point — that belongs in the component-specific sections or sub-documents (see *Splitting ARCHITECTURE.md* below).
-
-### 3. Technology Stack
-
-List the key technologies (languages, frameworks, databases, message brokers, deployment infrastructure) with a brief rationale for each choice. Include version constraints where they matter.
-
-### 4. Component Descriptions
-
-For each major component, describe:
-
-- **Responsibility** — what this component does
-- **Entry points** — the files, modules, or endpoints that define its public surface
-- **Key data it owns or consumes** — schemas, message formats, database tables
-- **Dependencies** — other components or external services it relies on
-- **Lifecycle** — how it starts, runs, and shuts down (relevant for services/daemons)
-
-### 5. Data Flow
-
-Describe the critical paths through the system. For each major flow (e.g., user signup, report generation, API request):
-
-- The initiating event or trigger
-- The sequence of components involved, in order
-- The shape of data as it moves between components (include key fields or message types)
-- Error / failure paths and how they are handled
-
-Use numbered lists or sequence diagrams for complex flows.
-
-### 6. Key Design Decisions and Trade-offs
-
-Record architecture decisions that new contributors (human or AI) need to understand. For each decision, describe:
-
-- The context and the problem being solved
-- The options considered
-- The chosen approach and why
-- The trade-offs accepted
-
-You may embed or reference Architecture Decision Records (ADRs) from `docs/adr/` if they exist.
-
-### 7. Security Model
-
-Document the boundaries of trust:
-
-- Authentication and authorization mechanisms
-- How secrets are managed
-- Network segmentation and firewall rules (if applicable)
-- Data encryption (in transit and at rest)
-- Output sanitization and injection prevention
-
-### 8. Deployment and Operations
-
-A brief description of how the system is built, packaged, and deployed:
-
-- Build pipeline (CI/CD steps, artifact types)
-- Infrastructure (cloud provider, container orchestration, bare metal)
-- Environment configuration (env files, feature flags, secrets injection)
-- Monitoring, logging, and alerting touchpoints
-
-### Splitting ARCHITECTURE.md
-
-If `docs/ARCHITECTURE.md` grows beyond a manageable size (roughly 300–500 lines or when any single section becomes too deep to skim), **split the detailed component documentation into separate files** so that `ARCHITECTURE.md` itself remains a broad overview.
-
-When splitting:
-
-1. **Keep the overview compact.** The main `ARCHITECTURE.md` should contain:
-   - The *Purpose and Scope* and *High-Level Architecture* sections in full
-   - A *Component Map* table listing each sub-document with its file path and a one-line summary
-   - A summary of deployment architecture
-   - Remaining sections trimmed to a summary paragraph each, with links to the dedicated documents
-
-2. **Create one document per component or logical group.** The split can follow the architecture naturally. Examples of possible divisions:
-
-   | If the system has...                | The documents might be...                           |
-   |-------------------------------------|-----------------------------------------------------|
-   | A front-end and a back-end          | `docs/FRONTEND.md`, `docs/BACKEND.md`               |
-   | A web UI and a database layer       | `docs/WEB_UI.md`, `docs/DATABASE.md`                |
-   | Microservices                       | `docs/SERVICE_AUTH.md`, `docs/SERVICE_PAYMENTS.md`, etc. |
-   | A pipeline with distinct stages     | `docs/INGESTION.md`, `docs/PROCESSING.md`, `docs/OUTPUT.md` |
-   | API, workers, and data store        | `docs/API.md`, `docs/WORKERS.md`, `docs/STORAGE.md` |
-
-3. **Each component document** should follow the same *Component Descriptions* and *Data Flow* patterns described above, scoped to that component.
-
-4. **Keep the document tree shallow.** Component documents should live directly inside `docs/` (or at most one level deeper, e.g. `docs/components/`). Cross-reference with relative paths:
-
-   ```markdown
-   See the [front-end architecture](FRONTEND.md) for UI component details.
-   ```
-
-5. **Update ARCHITECTURE.md's *Component Map* every time a component document is added, removed, or renamed.**
-
-## AGENTS.md
-
-The `AGENTS.md` file tells AI agents how to work with the project. It lives at `AGENTS.md` in the project root. It should be written in clear, imperative prose so that any agent can act on it without ambiguity.
-
-If `AGENTS.md` does not exist when an agent needs it, the agent should create it as part of the initial project setup.
-
-Include the following sections in `AGENTS.md`:
-
-### 1. Agent Roles
-
-List every AI agent or persona that interacts with this codebase. For each agent, describe:
-
-- **Name** — a short identifier (e.g. "frontend-agent", "reviewer")
-- **Responsibility** — what tasks this agent performs
-- **Scope boundaries** — what this agent should NOT do (e.g. "the frontend agent must never modify database migrations")
-- **Trigger conditions** — when this agent is active (e.g. "when a PR touches `src/ui/`")
-
-If the project only uses a single general-purpose agent, state that explicitly and describe the full scope of work.
-
-### 2. Project Conventions
-
-Document any project-specific rules that agents must follow:
-
-- Naming conventions beyond those enforced by linters
-- Branch naming and commit message format
-- Required file headers or license blocks
-- Any language or framework idioms that are preferred or forbidden
-
-### 3. File Patterns and Ownership
-
-Map file patterns to the agent responsible for them:
-
-```markdown
-| Pattern                          | Owner             | Notes                        |
-|----------------------------------|-------------------|------------------------------|
-| `src/frontend/**`                | frontend-agent    | All UI code                  |
-| `src/backend/**`                 | backend-agent     | API and business logic       |
-| `src/backend/migrations/**`      | backend-agent     | DB migrations; manual review |
-| `docs/ARCHITECTURE.md`           | any agent         | Must keep in sync with code  |
-| `AGENTS.md`                      | any agent         | Must keep in sync with code  |
+```python
+def add(a, b):
+    """Returns the sum of a and b."""
+    return a + b
 ```
 
-### 4. Handoff Protocols
+This docstring repeats the function name and signature without adding anything. Omit it.
 
-Describe how agents hand off work to each other. This is critical when multiple agents collaborate on the same project:
+**Good:**
 
-- **Inter-agent communication** — which channel or tool agents use (e.g. intercom, shared files, commit messages)
-- **Handoff triggers** — what event causes a handoff (e.g. "when the backend agent finishes an API endpoint, it signals the frontend agent to consume it")
-- **Artifact expectations** — what each agent leaves behind for the next (e.g. "the backend agent writes an OpenAPI spec to `docs/openapi.yaml` before handing off")
+```python
+def merge_intervals(intervals: list[tuple[date, date]]) -> list[tuple[date, date]]:
+    """Merge overlapping or touching date intervals.
 
-### 5. Agent Instructions
+    Returns a new list with all overlaps collapsed. Adjacent intervals
+    (end of one equals start of the next) are also merged. The input
+    order is preserved except that contained intervals are removed.
+    Returns an empty list when given an empty list.
+    """
+```
 
-Additional instructions specific to how agents should behave in this project:
+### 1.3 Language-Specific Docstring Formats
 
-- Read-before-edit rules (which files must be read before modifying)
-- Approval gates (which changes need human review)
-- Documentation update obligations (e.g. "any change to an API endpoint MUST update `docs/ARCHITECTURE.md`")
-- Testing requirements (which test suites to run before committing)
+Choose one format per project and apply it consistently. The most common conventions are:
 
-## Language Standards Integration
+| Language | Recommended Format | Tool |
+|---|---|---|
+| Python | Google style or NumPy/Sphinx | Sphinx, MkDocs, pdoc |
+| TypeScript / JavaScript | JSDoc (`@param`, `@returns`) | TypeDoc |
+| Rust | Rustdoc (`///`, `/// # Panics`, `/// # Errors`) | `cargo doc` |
+| Go | `gofmt`-style comments on exported symbols | `go doc`, `pkgsite` |
+| Ruby | YARD (`@param`, `@return`) | YARD |
+| Java / Kotlin | Javadoc / KDoc (`@param`, `@return`) | Dokka, Javadoc |
+| C++ | Doxygen (`\param`, `\return`) | Doxygen |
 
-When a programming language is chosen for a project, load the corresponding language skill (e.g., `python-dev`, `typescript-dev`, `rust-dev`) for project-specific coding conventions, tooling, and testing setup.
+Do not include information that is already present in the language's type system or function signature (e.g., don't repeat `@param name str` in Python when the signature says `name: str`). In JSDoc-style systems where types are primarily documented in the doc comment, this rule does not apply.
+
+### 1.4 Module-Level Docstrings
+
+Every non-trivial module or file should have a top-level docstring explaining the module's purpose, what symbols it exports, and any side effects of importing it (e.g., logging configuration, monkey patches).
+
+```python
+"""Functions for merging overlapping date intervals.
+
+Public API:
+    merge_intervals   — collapse overlapping intervals
+    flatten_intervals — remove nesting without merging
+"""
+```
+
+### 1.5 Class Docstrings
+
+Document every public class. Include:
+
+- The class's responsibility in one sentence
+- Usage pattern or lifecycle (how to construct, use, and clean up)
+- Thread-safety guarantees, if any
+
+```python
+class IntervalMerger:
+    """Merge overlapping date intervals for a single entity.
+
+    Construct with an entity ID, then call .add(interval) for each
+    interval. Call .result() to get the merged list. Not thread-safe.
+    """
+```
+
+---
+
+## 2. Inline Code Comments
+
+Inline comments explain **why**, not **what**. The code itself expresses what it does; comments justify non-obvious choices.
+
+### 2.1 When to Comment
+
+- **Non-obvious trade-offs**: "We sort in descending order here because the API requires newest-first and paginates from the top."
+- **Bug workarounds**: "Workaround for library v2.3 bug #418: call flush() twice to clear the buffer."
+- **Complex algorithms**: A one-line summary of a non-trivial algorithm, potentially citing a reference.
+- **Security or safety**: "This comparison is intentionally not constant-time; timing attacks are not a threat in this context."
+
+### 2.2 When NOT to Comment
+
+- **Obvious code**: `i += 1  # increment i by 1` — this is noise.
+- **Commented-out code**: Never check in commented-out code. Delete it; version control preserves history.
+
+### 2.3 TODO/FIXME/HACK Conventions
+
+| Marker | Meaning |
+|---|---|
+| `TODO` | Something missing or incomplete (ideally with a ticket link). |
+| `FIXME` | Known bug or incorrect behavior. |
+| `HACK` | A brittle but expedient workaround; explain why it's acceptable. |
+| `XXX` | Dangerous or fragile code; reviewer should scrutinize. |
+
+Every marker should include a brief explanation and, where possible, a reference to a tracking issue:
+
+```python
+# TODO(#312): Handle daylight saving time transitions for timezone-aware dates.
+```
+
+---
+
+## 3. README
+
+### 3.1 When to Write
+
+Write the README **iteratively during development**, not at the end. Start with a skeleton early (project purpose, how to run it) and refine it as the project grows. A README written after "coding is complete" is almost always rushed, incomplete, or skipped entirely. Finalize it before the first public release.
+
+### 3.2 What to Include
+
+```
+project-name/
+├── README.md          ← this file
+├── src/               ← application / library code
+└── tests/             ← test suite
+```
+
+- **Project purpose**: What problem does this solve? Who is the audience?
+- **Features**: Bullet list of key capabilities. Prefer short, scannable items.
+- **Quick start / installation**: Exact commands to set up and run. Test these commands before release.
+- **Directory structure**: A top-level tree view with one-line descriptions for each directory or module. Do not list every file — just the logical groupings.
+
+    ```
+    src/          — application code
+    tests/        — test suite (mirrors src/ structure)
+    docs/         — architecture and design documents
+    scripts/      — build and CI helper scripts
+    ```
+
+- **Dependencies**: Runtime dependencies (language, database, external services) and how to install them. Link to a lockfile or environment definition file (`Cargo.toml`, `pyproject.toml`, `package.json`, etc.) rather than duplicating versions.
+- **How to run**: Commands for development server, tests, linting, and building.
+- **Configuration**: Environment variables, config files, or CLI flags the user needs to know about.
+- (Optional) **Contributing guide**: Link to `CONTRIBUTING.md` if one exists.
+- (Optional) **License**: Link to `LICENSE` if one exists.
+
+### 3.3 Maintenance
+
+- Update the README whenever dependencies, setup steps, or the public API surface changes.
+- If a README instruction is wrong, fix it in the same commit that introduced the discrepancy.
+- Test the quick-start instructions at least once per release cycle.
+
+---
+
+## 4. AGENTS.md
+
+For AI-assisted development, always write an `AGENTS.md` that instructs coding agents on project conventions, build commands, and safety rules. See the **[agents-doc](../agents-doc/SKILL.md)** skill for detailed conventions.
+
+---
+
+## 5. ARCHITECTURE Documentation
+
+For projects spanning multiple modules or involving non-obvious design decisions, write an `docs/ARCHITECTURE.md`. See the **[architecture-doc](../architecture-doc/SKILL.md)** skill for detailed conventions.
+
+---
+
+## 6. Keeping Documentation Current
+
+Documentation that is out of date is worse than no documentation at all — it actively misleads. Apply these rules to every commit:
+
+### 6.1 Documentation Is Part of the Change
+
+Any commit that alters a function's signature, behavior, or dependencies MUST update the corresponding docstring, README, or architecture document in the same commit. Never leave documentation cleanup as a separate follow-up task.
+
+### 6.2 Review for Drift
+
+During code review, check that the documentation still matches the code. If a docstring describes parameters that no longer exist or a README gives instructions that don't work, the reviewer should flag it as a blocking issue.
+
+### 6.3 Stale Documentation
+
+When you encounter documentation that is out of date while working on unrelated code, fix the discrepancy immediately or add a TODO comment referencing the issue. Do not defer it to a future cleanup pass.
+
+### 6.4 Deprecation Lifecycle
+
+When an API is deprecated:
+
+1. Add a deprecation notice to the docstring specifying the version of deprecation and the recommended replacement.
+2. Keep the deprecated function for at least one major version after deprecation.
+3. Before removal, update all callers within the project.
+
+```python
+def old_api():
+    """Deprecated since v2.0. Use new_api() instead."""
+```
+
+---
+
+## 7. When Not to Document
+
+Over-documentation is harmful — it creates maintenance burden, obscures the important comments, and wastes reader time. Skip documentation in these cases:
+
+- **Self-documenting code**: A function named `is_valid_email(s: str) -> bool` does not need a docstring that says "Check whether a string is a valid email."
+- **Trivial getters/setters**: `def name(self) -> str` — the name and return type are enough.
+- **Signatures that say everything**: `def add(a: int, b: int) -> int` — the type signature is the documentation.
+- **README content that duplicates --help**: If `app --help` produces clear usage output, the README can say "Run `app --help` for full options" rather than reproducing the list.
+
+Prefer clear, intention-revealing names over comments that explain what the code does. Good naming reduces the documentation surface that needs maintenance.
+
+---
+
+## 8. Documentation Generation Tools
+
+When a project is large enough to warrant generated documentation, use the ecosystem-standard tool:
+
+| Language | Tool | Primary Source |
+|---|---|---|
+| Python | Sphinx, MkDocs, pdoc | Docstrings (Google / NumPy / reST) |
+| Rust | `cargo doc` / rustdoc | `///` doc comments |
+| TypeScript / JavaScript | TypeDoc, JSDoc | `/** */` comments |
+| Go | `go doc`, `pkgsite` | Go doc comments |
+| Java / Kotlin | Dokka, Javadoc | `/** */` comments |
+| C / C++ | Doxygen | `/**` or `///` comments |
+| Ruby | YARD | `# @param` / `# @return` |
+
+- Run the tool as part of CI to catch malformed doc comments.
+- Do not commit generated output (HTML, etc.) to the repository unless the project explicitly requires it for static hosting.
+- Configure the tool to warn about missing public API documentation where appropriate.
+
+---
+
+## 9. Related Skills
+
+- **[architecture-doc](../architecture-doc/SKILL.md)** — Writing ARCHITECTURE.md: system design, module maps, and decision records.
+- **[agents-doc](../agents-doc/SKILL.md)** — Writing AGENTS.md: AI agent instructions for a project.
+- **[review-plan](../review-plan/SKILL.md)** — Reviewing architecture documents and feature plans.
