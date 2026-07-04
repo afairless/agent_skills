@@ -61,6 +61,7 @@ Read each skill's `SKILL.md` to understand its guidance.
 | **[testing-guide](../testing-guide/SKILL.md)** | Assess whether the plan's testing coverage is adequate and follows good methodology. |
 | **[security-guardrails](../security-guardrails/SKILL.md)** | Identify any security concerns or missing security considerations in the plan. |
 | **[incremental-development](../incremental-development/SKILL.md)** | Evaluate whether the plan's steps are small, testable, and logically ordered. |
+| **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** | Check whether data flow respects the three-stage model (ingestion → transformation → output). |
 
 ---
 
@@ -165,6 +166,16 @@ anything you find.
 - Misunderstanding of language or framework features.
 - Impossible or circular dependency ordering.
 - Syntax errors in any code snippets included in the plan.
+
+### 5.8 — Data processing staging
+
+For plans that involve data flow between components, check the [data-pipeline-architecture](../data-pipeline-architecture/SKILL.md) three-stage model:
+
+- Does the plan separate ingestion (validate, do not transform) from transformation (apply business logic) from output (convert to consumer format)?
+- Are data contracts between stages explicit — null handling, type conversions with validation, range constraints?
+- Is data validated and logged at the ingestion boundary without being changed?
+- Does the output stage convert to the consumer's expected format rather than leaking internal representations?
+- Are bad-data paths accounted for (dead-letter queues, explicit error handling)?
 
 ---
 

@@ -226,3 +226,6 @@ docs/       — architecture and research documents
 - **[documentation-practices](../documentation-practices/SKILL.md)** — General documentation conventions (docstrings, README, inline comments).
 - **[architecture-doc](../architecture-doc/SKILL.md)** — Writing and maintaining ARCHITECTURE.md.
 - **[review-plan](../review-plan/SKILL.md)** — Reviewing project plans and architecture documents.
+- **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** — The three-stage data processing model. Reference when specifying data handling conventions in AGENTS.md.
+- **[data-contracts](../data-contracts/SKILL.md)** — Data quality contracts at boundaries. Reference when specifying validation and error handling rules for agents.
+- **[data-pipeline-reliability](../data-pipeline-reliability/SKILL.md)** — Production reliability practices. Reference when specifying idempotency and monitoring requirements.

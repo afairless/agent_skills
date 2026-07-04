@@ -92,7 +92,7 @@ These apply to both modes. Every step builds cleanly on all previous steps.
 
 1. **Foundation first.** In greenfield mode: repo initialisation, toolchain config, project skeleton. In feature mode: any shared types, error types, or configuration changes.
 2. **Shared types and errors before their consumers.** Any component whose types or interfaces are imported by others must appear earlier.
-3. **Data access before logic.** Readers, loaders, and parsers come before business logic that transforms data.
+3. **Data access before logic.** Readers, loaders, and parsers come before business logic that transforms data. See [data-pipeline-architecture](../data-pipeline-architecture/SKILL.md) for the full three-stage model.
 4. **Core logic before output.** Computational modules come before formatting, writing, or reporting.
 5. **Wiring last.** The entry point or orchestrator is its own step, assembled after all components it wires together.
 6. **Integration tests after all implementation steps.** Cross-component tests belong after every component exists.

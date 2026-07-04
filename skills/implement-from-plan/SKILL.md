@@ -48,6 +48,7 @@ Load skills that teach the implementation workflow and language conventions.
 | **[incremental-development](../incremental-development/SKILL.md)** | Always | Enforces the write-test-verify-commit loop for every step. |
 | **[git-workflow](../git-workflow/SKILL.md)** | Always | Branching strategy, pre-commit checks, cleanup. |
 | **[conventional-commit](../conventional-commit/SKILL.md)** | Always | Commit message format. |
+| **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** | When data flows through stages | Ensures ingestion, transformation, and output stages are separated. |
 
 **Language skill** — if `LANGUAGE` is a known language, load the
 corresponding dev skill:

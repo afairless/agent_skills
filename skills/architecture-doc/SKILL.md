@@ -166,3 +166,4 @@ Architecture documentation that is out of date is worse than no documentation �
 - **[documentation-practices](../documentation-practices/SKILL.md)** — General documentation conventions (docstrings, README, inline comments).
 - **[agents-doc](../agents-doc/SKILL.md)** — Writing and maintaining AGENTS.md for AI agent instructions.
 - **[review-plan](../review-plan/SKILL.md)** — Reviewing architecture documents and feature plans for consistency and completeness.
+- **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** — The three-stage model for data processing (ingestion → transformation → output). Apply when documenting data flow in system architecture.

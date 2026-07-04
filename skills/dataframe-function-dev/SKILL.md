@@ -134,11 +134,13 @@ A good error message states three things:
 | `Too few rows` | `>= 1` | `0` |
 
 **Bad:**
+
 ```python
 assert df.schema == expected_schema
 ```
 
 **Good:**
+
 ```python
 assert df.schema == expected_schema, (
     f"Expected schema {expected_schema}, got {df.schema}")
@@ -177,6 +179,7 @@ def merge_intervals(df):
 ```
 
 Key advantages of this approach:
+
 - Validation logic stays out of function bodies (separation of concerns).
 - A single schema object can be reused across multiple functions that share
   the same contract.
@@ -400,6 +403,7 @@ are wasted effort.
 Before marking a dataframe function complete:
 
 **Input validation**
+
 - [ ] Checks that all required column names are present; names the missing columns in the message
 - [ ] Checks the data type of each required column; names the offending column and states the expected type
 - [ ] Checks minimum row count if the algorithm requires it
@@ -409,6 +413,7 @@ Before marking a dataframe function complete:
 - [ ] Documents and tests whether the function mutates the input or returns a new dataframe
 
 **Test coverage**
+
 - [ ] One test per validation check (Layer 1)
 - [ ] Single-row and minimal two-row cases (Layer 2)
 - [ ] Every logically distinct case for the core behavior, with explicit expected outputs (Layer 3)
@@ -416,6 +421,16 @@ Before marking a dataframe function complete:
 - [ ] Property-based tests for idempotency, permutation invariance, or coverage preservation where exhaustive enumeration is infeasible (Layer 5)
 
 **Performance**
+
 - [ ] Hot paths use vectorized operations; no row-by-row loops in the dataframe layer
 - [ ] Per-category work uses the library's parallel `group_by` API where available
 - [ ] Sequential algorithms pull data into plain lists/arrays before looping
+
+---
+
+## 5 — Related Skills
+
+- **[data-contracts](../data-contracts/SKILL.md)** — Data quality contracts at every boundary: validation, type conversion, null handling, and schema evolution. Every dataframe function is a transformation-stage component; its input and output contracts should be explicit.
+- **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** — The three-stage model (ingestion → transformation → output). Understand where your dataframe function fits in the pipeline.
+- **[data-pipeline-reliability](../data-pipeline-reliability/SKILL.md)** — Production reliability: idempotency, monitoring, and performance patterns relevant to dataframe pipelines.
+- **[testing-guide](../testing-guide/SKILL.md)** — General testing methodology, including the None-One-Many parameter principle.
