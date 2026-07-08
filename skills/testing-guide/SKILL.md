@@ -58,3 +58,4 @@ description: General methodology for writing tests across all languages and fram
 - **[data-contracts](../data-contracts/SKILL.md)** — Testing data quality contracts: one test per constraint, verifying that contract boundaries reject invalid inputs.
 - **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** — Testing pipeline stages in isolation with mocked upstream outputs.
 - **[data-pipeline-reliability](../data-pipeline-reliability/SKILL.md)** — Property-based tests for idempotency and determinism in data pipelines.
+- **[frontend-debug](../frontend-debug/SKILL.md)** — Browser-based visual verification and UI debugging using agent-browser automation. Pair automated tests with live browser inspection.

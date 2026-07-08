@@ -32,6 +32,7 @@ Read these skills for supporting conventions:
 - [conventional-commit](../conventional-commit/SKILL.md) — commit message format and types
 - [plan-commits](../plan-commits/SKILL.md) — producing a commit-by-commit plan in `TODO.md`
 - [testing-guide](../testing-guide/SKILL.md) — unit, integration, and property-based testing methodology
+- [frontend-debug](../frontend-debug/SKILL.md) — Browser-based verification for front-end changes during the Verify step of the per-step loop.
 - [data-pipeline-architecture](../data-pipeline-architecture/SKILL.md) — structure data processing code into distinct stages (ingestion → transformation → output)
 
 ---

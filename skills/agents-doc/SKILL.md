@@ -229,3 +229,4 @@ docs/       — architecture and research documents
 - **[data-pipeline-architecture](../data-pipeline-architecture/SKILL.md)** — The three-stage data processing model. Reference when specifying data handling conventions in AGENTS.md.
 - **[data-contracts](../data-contracts/SKILL.md)** — Data quality contracts at boundaries. Reference when specifying validation and error handling rules for agents.
 - **[data-pipeline-reliability](../data-pipeline-reliability/SKILL.md)** — Production reliability practices. Reference when specifying idempotency and monitoring requirements.
+- **[frontend-debug](../frontend-debug/SKILL.md)** — Local browser debugging for front-end projects. Reference in AGENTS.md to tell agents how to verify UI changes with agent-browser.
